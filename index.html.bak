@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+	    <h4 align=center>Climate-based seed zones for Mexico</h4>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/CONAFOR_Seedzones_8.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[13.562460146761786,-119.76165060700113],[35.01810361162905,-92.32443381253451]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('</h1><a href="https://link.springer.com/article/10.1007/s11056-017-9620-6"><div align="center"><img src="images/img.jpg" width="500">');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_GoogleTerrainHybrid_0');
+        map.getPane('pane_GoogleTerrainHybrid_0').style.zIndex = 400;
+        var layer_GoogleTerrainHybrid_0 = L.tileLayer('http://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleTerrainHybrid_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 22
+        });
+        layer_GoogleTerrainHybrid_0;
+        map.createPane('pane_GoogleMaps_1');
+        map.getPane('pane_GoogleMaps_1').style.zIndex = 401;
+        var layer_GoogleMaps_1 = L.tileLayer('http://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleMaps_1',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 22
+        });
+        layer_GoogleMaps_1;
+        map.createPane('pane_GoogleSatellite_2');
+        map.getPane('pane_GoogleSatellite_2').style.zIndex = 402;
+        var layer_GoogleSatellite_2 = L.tileLayer('http://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatellite_2',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 22
+        });
+        layer_GoogleSatellite_2;
+        map.createPane('pane_StamenTerrain_3');
+        map.getPane('pane_StamenTerrain_3').style.zIndex = 403;
+        var layer_StamenTerrain_3 = L.tileLayer('http://a.tile.stamen.com/terrain/{z}/{x}/{y}.png', {
+            pane: 'pane_StamenTerrain_3',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 22
+        });
+        layer_StamenTerrain_3;
+        map.addLayer(layer_StamenTerrain_3);
+        map.createPane('pane_AHM_1961_1990_4');
+        map.getPane('pane_AHM_1961_1990_4').style.zIndex = 404;
+        var img_AHM_1961_1990_4 = 'data/AHM_1961_1990_4.png';
+        var img_bounds_AHM_1961_1990_4 = [[14.540884554959998,-117.13218866531],[32.72505497866895,-86.72659857521896]];
+        var layer_AHM_1961_1990_4 = new L.imageOverlay(img_AHM_1961_1990_4,
+                                              img_bounds_AHM_1961_1990_4,
+                                              {pane: 'pane_AHM_1961_1990_4'});
+        bounds_group.addLayer(layer_AHM_1961_1990_4);
+        map.createPane('pane_AHM_1991_2015_5');
+        map.getPane('pane_AHM_1991_2015_5').style.zIndex = 405;
+        var img_AHM_1991_2015_5 = 'data/AHM_1991_2015_5.png';
+        var img_bounds_AHM_1991_2015_5 = [[14.540884555476996,-117.13218866534],[32.72505497866116,-86.72659857612643]];
+        var layer_AHM_1991_2015_5 = new L.imageOverlay(img_AHM_1991_2015_5,
+                                              img_bounds_AHM_1991_2015_5,
+                                              {pane: 'pane_AHM_1991_2015_5'});
+        bounds_group.addLayer(layer_AHM_1991_2015_5);
+        map.createPane('pane_AHM_2050_rcp4_5_6');
+        map.getPane('pane_AHM_2050_rcp4_5_6').style.zIndex = 406;
+        var img_AHM_2050_rcp4_5_6 = 'data/AHM_2050_rcp4_5_6.png';
+        var img_bounds_AHM_2050_rcp4_5_6 = [[14.540884554959998,-117.13218866531],[32.72505497866895,-86.72659857521896]];
+        var layer_AHM_2050_rcp4_5_6 = new L.imageOverlay(img_AHM_2050_rcp4_5_6,
+                                              img_bounds_AHM_2050_rcp4_5_6,
+                                              {pane: 'pane_AHM_2050_rcp4_5_6'});
+        bounds_group.addLayer(layer_AHM_2050_rcp4_5_6);
+        map.createPane('pane_AHM_2050_rcp8_7');
+        map.getPane('pane_AHM_2050_rcp8_7').style.zIndex = 407;
+        var img_AHM_2050_rcp8_7 = 'data/AHM_2050_rcp8_7.png';
+        var img_bounds_AHM_2050_rcp8_7 = [[14.437313201855002,-118.50820807084],[32.8138304241874,-86.60823131452064]];
+        var layer_AHM_2050_rcp8_7 = new L.imageOverlay(img_AHM_2050_rcp8_7,
+                                              img_bounds_AHM_2050_rcp8_7,
+                                              {pane: 'pane_AHM_2050_rcp8_7'});
+        bounds_group.addLayer(layer_AHM_2050_rcp8_7);
+        map.addLayer(layer_AHM_2050_rcp8_7);
+        function pop_CONAFOR_Seedzones_8(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">ZMG</th>\
+                        <td>' + (feature.properties['ZMG'] !== null ? autolinker.link(feature.properties['ZMG'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_CONAFOR_Seedzones_8_0() {
+            return {
+                pane: 'pane_CONAFOR_Seedzones_8',
+                opacity: 1,
+                color: 'rgba(79,79,79,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_CONAFOR_Seedzones_8');
+        map.getPane('pane_CONAFOR_Seedzones_8').style.zIndex = 408;
+        map.getPane('pane_CONAFOR_Seedzones_8').style['mix-blend-mode'] = 'normal';
+        var layer_CONAFOR_Seedzones_8 = new L.geoJson(json_CONAFOR_Seedzones_8, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_CONAFOR_Seedzones_8',
+            layerName: 'layer_CONAFOR_Seedzones_8',
+            pane: 'pane_CONAFOR_Seedzones_8',
+            onEachFeature: pop_CONAFOR_Seedzones_8,
+            style: style_CONAFOR_Seedzones_8_0,
+        });
+        bounds_group.addLayer(layer_CONAFOR_Seedzones_8);
+        map.addLayer(layer_CONAFOR_Seedzones_8);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/CONAFOR_Seedzones_8.png" /> CONAFOR_Seedzones': layer_CONAFOR_Seedzones_8,"AHM_2050_rcp8": layer_AHM_2050_rcp8_7,"AHM_2050_rcp4_5": layer_AHM_2050_rcp4_5_6,"AHM_1991_2015": layer_AHM_1991_2015_5,"AHM_1961_1990": layer_AHM_1961_1990_4,"Stamen Terrain": layer_StamenTerrain_3,"Google Satellite": layer_GoogleSatellite_2,"Google Maps": layer_GoogleMaps_1,"Google Terrain Hybrid": layer_GoogleTerrainHybrid_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        map.addControl(new L.Control.Search({
+            layer: layer_CONAFOR_Seedzones_8,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'ZMG'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        </script>
+    </body>
+</html>
